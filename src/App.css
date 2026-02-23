@@ -1,0 +1,191 @@
+/* Gør containeren så den fylder hele mobilskærmen og fjerner scroll */
+body, html {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.app-container {
+  height: 100dvh; /* dynamic viewport height - bedst til mobil */
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #121212;
+  touch-action: none; /* Forhindrer browseren i at tro man vil scrolle siden */
+}
+
+/* Containeren skal centrere kortene oven på hinanden */
+.card-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 600px; /* Sørg for at der er højde nok til poster-formatet */
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Selve TinderCard komponenten skal fylde containeren */
+.swipe-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title{
+  font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 50%, #bde0fe 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  touch-action: manipulation;
+  pointer-events: none;
+}
+
+/* Selve kortet med billedet */
+.card {
+  position: relative;
+  background-color: #fff;
+  width: 350px; /* Fast bredde */
+  height: 500px; /* Fast højde (poster format) */
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
+  border-radius: 20px;
+  background-size: cover; /* VIGTIGT: Dette sikrer at billedet fylder kortet ud */
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.card h3 {
+  margin: 10px;
+  color: #fff;
+  text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
+}
+
+.card-info{
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  /* Use a soft gradient + transparency so the poster remains visible
+     and important poster text/art isn't fully blocked. Add a subtle
+     backdrop blur for contrast without hiding the image. */
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.0) 100%);
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  width: calc(100% - 40px);
+  max-width: 300px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  touch-action: manipulation;
+  pointer-events: none;
+}
+/* Styles matching the classNames used in App.jsx */
+.genres {
+  display: flex;
+  gap: 8px; /* space between genre badges */
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.genre-badge {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  line-height: 1;
+  opacity: 0.95;
+}
+
+/* Keep legacy class names (if any other styles referenced them) */
+.genre-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+.genre-tag { background: rgba(255,255,255,0.12); color: #fff; padding: 4px 8px; border-radius: 999px; font-size: 0.75rem; line-height:1; opacity:0.95; }
+
+/* Matches view styling */
+.view-toggle {
+  margin: 16px 0;
+  background: linear-gradient(90deg, #ff9a9e 0%, #bde0fe 100%);
+  color: #071024;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.matches-section {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px 16px;
+  color: #fff;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.matches-section h2 {
+  margin: 0 0 12px 0;
+  font-size: 1.3rem;
+}
+
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.match-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.match-card img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+}
+
+.match-card p {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 12px 8px;
+  font-size: 0.85rem;
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  border-radius: 0 0 12px 12px;
+}
