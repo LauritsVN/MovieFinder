@@ -12,80 +12,64 @@ namespace MovieFinderAPI.Controllers
     {
         private readonly MovieService _movieService;
         private readonly AppDbContext _context;
+        private readonly GroqService _groqService;
 
-        public MoviesController(MovieService movieService, AppDbContext context)
+        public MoviesController(MovieService movieService, AppDbContext context, GroqService groqService)
         {
             _movieService = movieService;
             _context = context;
+            _groqService = groqService;
         }
 
-        [HttpGet("discover")]
-        [HttpGet("discover/{userId}")] // Vi tilføjer userId til ruten
-        public async Task<IActionResult> GetMoviesToSwipe(int userId)
+        [HttpGet("smart-discovery/{userId}")]
+        public async Task<IActionResult> GetSmartDiscovery(int userId, [FromQuery] int? genreId, [FromQuery] string? similarTo, [FromQuery] string? mood)
         {
-            // 1. Hent de populære film fra TMDB 
-            var allMovies = await _movieService.GetPopularMoviesAsync();
+            var finalMovies = new List<TmdbMovieDto>();
 
-            // 2. Find alle film-IDs som denne bruger ALLEREDE har swipet på (både likes og dislikes)
-            var swipedMovieIds = await _context.UserSwipes
-                .Where(s => s.UserId == userId)
-                .Select(s => s.TmdbId)
-                .ToListAsync();
+            // 1. PRIORITET: Humør/Mood (Gemini AI)
+            if (!string.IsNullOrEmpty(mood))
+            {
+                var titles = await _groqService.GetMovieRecommendationsAsync(mood);
+                foreach (var title in titles)
+                {
+                    var results = await _movieService.SearchMovieByNameAsync(title);
+                    if (results.Any()) finalMovies.Add(results.First());
+                }
+            }
+            // 2. PRIORITET: Minder om...
+            else if (!string.IsNullOrEmpty(similarTo))
+            {
+                var searchResults = await _movieService.SearchMovieByNameAsync(similarTo);
+                if (searchResults.Any())
+                {
+                    finalMovies = await _movieService.GetSimilarMoviesAsync(searchResults.First().Id);
+                }
+            }
+            // 3. PRIORITET: Genre
+            else if (genreId.HasValue)
+            {
+                finalMovies = await _movieService.GetMoviesByGenreAsync(genreId.Value);
+            }
+            // FALLBACK
+            else
+            {
+                finalMovies = await _movieService.GetPopularMoviesAsync();
+            }
 
-            // 3. Filtrér listen: Behold kun de film, hvis ID IKKE findes i databasen
-            var freshMovies = allMovies
-                .Where(m => !swipedMovieIds.Contains(m.Id))
-                .ToList();
+            // Filtrer film brugeren allerede har set
+            var swipedIds = await _context.UserSwipes.Where(s => s.UserId == userId).Select(s => s.TmdbId).ToListAsync();
+            var freshMovies = finalMovies.Where(m => !swipedIds.Contains(m.Id)).ToList();
 
+            Console.WriteLine($"Antal film fundet: {finalMovies.Count}. Antal efter filter: {freshMovies.Count}");
             return Ok(freshMovies);
         }
 
-        [HttpGet("recommendations/{userId}")]
-        public async Task<IActionResult> GetPersonalRecommendations(int userId)
-        {
-            // 1. Find film brugeren har liket i din database
-            var likedMovieIds = await _context.UserSwipes
-                .Where(s => s.UserId == userId && s.IsLike == true)
-                .Select(s => s.TmdbId)
-                .ToListAsync();
-
-            if (!likedMovieIds.Any())
-            {
-                // Hvis brugeren er ny, giv dem bare populære film
-                return Ok(await _movieService.GetPopularMoviesAsync());
-            }
-
-            var allRecs = new List<TmdbMovieDto>();
-
-            // 2. Hent anbefalinger for de 3 nyeste likes 
-            foreach (var id in likedMovieIds.TakeLast(3))
-            {
-                var recs = await _movieService.GetRecommendationsForMovieAsync(id);
-                allRecs.AddRange(recs);
-            }
-
-            // 3. Rens listen: Fjern film brugeren ALLEREDE har swipet på
-            var alreadySwipedIds = await _context.UserSwipes
-                .Where(s => s.UserId == userId)
-                .Select(s => s.TmdbId)
-                .ToListAsync();
-
-            var filteredRecs = allRecs
-                .Where(m => !alreadySwipedIds.Contains(m.Id))
-                .GroupBy(m => m.Id) // Fjern dubletter
-                .Select(g => g.First())
-                .Take(20) // Send top 20 tilbage
-                .ToList();
-
-            return Ok(filteredRecs);
-        }
-
+        // Behold dine matches som de er
         [HttpGet("matches/{userId}")]
         public async Task<IActionResult> GetMatches(int userId)
         {
-            // Hent alle swipes for brugeren, der er "likes"
             var matches = await _context.UserSwipes
-                .Where(s => s.UserId == userId && s.IsLike)
+                .Where(s => s.UserId == userId && s.IsLike == true)
                 .OrderByDescending(s => s.Timestamp)
                 .ToListAsync();
 
