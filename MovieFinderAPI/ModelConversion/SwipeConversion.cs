@@ -19,7 +19,11 @@ namespace MovieFinderAPI.ModelConversion
                 UserId = dto.UserId,
                 TmdbId = dto.TmdbId,
                 IsLike = dto.IsLike,
-                Timestamp = dto.Timestamp
+                HasWatched = dto.HasWatched,
+                Timestamp = dto.Timestamp,
+                OriginalTitle = dto.OriginalTitle,
+                PosterPath = dto.PosterPath
+
             };
         }
 
@@ -36,7 +40,10 @@ namespace MovieFinderAPI.ModelConversion
                 UserId = entity.UserId,
                 TmdbId = entity.TmdbId,
                 IsLike = entity.IsLike,
-                Timestamp = entity.Timestamp
+                HasWatched = entity.HasWatched,
+                Timestamp = entity.Timestamp,
+                OriginalTitle = entity.OriginalTitle,
+                PosterPath = entity.PosterPath
             };
         }
     }

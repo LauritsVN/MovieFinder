@@ -4,7 +4,8 @@
     {
         public int UserId { get; set; }
         public int TmdbId { get; set; }
-        public bool IsLike { get; set; } // True = Højre, False = Venstre
+        public bool? IsLike { get; set; } // True = Højre, False = Venstre
+        public bool HasWatched { get; set; } = false;
         public DateTime Timestamp { get; set; } = DateTime.Now;
 
         public string OriginalTitle { get; set; } = string.Empty;
