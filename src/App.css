@@ -9,6 +9,8 @@ body, html {
 .app-container {
   height: 100dvh; /* dynamic viewport height - bedst til mobil */
   width: 100vw;
+  position: relative;
+  padding-bottom: 96px; /* space for bottom button */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +23,9 @@ body, html {
   position: relative;
   width: 100%;
   max-width: 400px;
-  height: 600px; /* Sørg for at der er højde nok til poster-formatet */
+  height: auto;
+  min-height: 62vh; /* give cards room so posters are larger */
+  padding: 8px 0;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -60,11 +64,12 @@ body, html {
 .card {
   position: relative;
   background-color: #fff;
-  width: 350px; /* Fast bredde */
-  height: 500px; /* Fast højde (poster format) */
+  width: min(420px, 94vw);
+  aspect-ratio: 2 / 3;
+  height: auto;
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
   border-radius: 20px;
-  background-size: cover; /* VIGTIGT: Dette sikrer at billedet fylder kortet ud */
+  background-size: cover; /* sikrer at billedet fylder kortet ud */
   background-position: center;
   display: flex;
   flex-direction: column;
@@ -94,13 +99,17 @@ body, html {
   text-align: center;
   width: calc(100% - 40px);
   max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   user-select: none;
   touch-action: manipulation;
-  pointer-events: none;
+  pointer-events: auto;
 }
 /* Styles matching the classNames used in App.jsx */
 .genres {
@@ -124,6 +133,83 @@ body, html {
 /* Keep legacy class names (if any other styles referenced them) */
 .genre-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
 .genre-tag { background: rgba(255,255,255,0.12); color: #fff; padding: 4px 8px; border-radius: 999px; font-size: 0.75rem; line-height:1; opacity:0.95; }
+
+.checkbox-container {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
+}
+
+.checkbox-container input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.25);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkbox-container input[type="checkbox"]::after {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border-right: 2px solid #071024;
+  border-bottom: 2px solid #071024;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s ease;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+  border-color: transparent;
+  background: linear-gradient(90deg, #ff9a9e 0%, #bde0fe 100%);
+}
+
+.checkbox-container input[type="checkbox"]:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.checkbox-container label {
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+}
+
+.info-btn {
+  margin-top: 2px;
+  background: linear-gradient(90deg, #ff9a9e 0%, #bde0fe 100%);
+  color: #071024;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
+  transition: transform 0.18s ease, filter 0.2s ease;
+}
+
+.info-btn:hover {
+  filter: brightness(1.03);
+}
+
+.info-btn:active {
+  transform: translateY(1px);
+}
 
 /* Matches view styling */
 .view-toggle {
@@ -188,4 +274,143 @@ body, html {
   text-align: center;
   background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
   border-radius: 0 0 12px 12px;
+}
+
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+  text-align: center;
+}
+
+/* Swipe section wrapper so the back button can sit above cards */
+.swipe-section {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Style the native select and its options so the dropdown isn't white */
+.filter-group select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(17,24,39,0.95);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.filter-group select option {
+  background: #0b1220;
+  color: #fff;
+}
+
+.start-button {
+  background: #fe3c72;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Make the back-button match the app's stylish controls */
+.back-button {
+  background: linear-gradient(90deg, #ff9a9e 0%, #bde0fe 100%);
+  color: #071024;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  cursor: pointer;
+}
+
+/* Ensure back button sits centered above swipe cards and is visible */
+.back-button {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 14px) - 12px); /* lift above the card */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 140;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Enhancements for filter controls and mobile-first styling */
+.filter-container p {
+  color: #cbd5e1;
+  margin: 0 0 6px 0;
+}
+
+.filter-group label {
+  color: #dbeafe;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.filter-group select,
+.filter-group input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 12px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.start-button {
+  background: linear-gradient(90deg, #ff9a9e 0%, #bde0fe 100%);
+  color: #071024;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  border: none;
+  font-size: 1rem;
+}
+
+/* Fixed bottom 'Se mine Matches' button for mobile -- always at the lowest point */
+.matches-bottom {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 18px) + 8px);
+  z-index: 60;
+  background: linear-gradient(90deg, #ff9a9e 0%, #bde0fe 100%);
+  color: #071024;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 800;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  width: calc(100% - 48px);
+  max-width: 420px;
+  text-align: center;
+}
+
+/* Slightly wider filter group on modern phones */
+.filter-group { max-width: 360px; }
+
+@media (max-width: 430px) {
+  .card { width: min(340px, 92vw); aspect-ratio: 2 / 3; }
+  .card-container { padding: 6px 0; }
+  .title { font-size: 1.9rem; }
+  .filter-container { padding: 20px 16px 28px 16px; }
+  .matches-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
