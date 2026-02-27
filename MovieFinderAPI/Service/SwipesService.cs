@@ -21,6 +21,7 @@ namespace MovieFinderAPI.Service
                     UserId = swipe.UserId,
                     TmdbId = swipe.TmdbId,
                     IsLike = swipe.IsLike,
+                    HasWatched = swipe.HasWatched,
                     OriginalTitle = swipe.OriginalTitle, // Husk denne
                     PosterPath = swipe.PosterPath,
                     Timestamp = swipe.Timestamp

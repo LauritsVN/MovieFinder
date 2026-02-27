@@ -25,13 +25,14 @@ namespace MovieFinderAPI.Service
                     model = "llama-3.1-8b-instant",
                     messages = new[]
                     {
-                new { role = "system", content = @"You are a professional movie expert. Follow these rules strictly:
-                             1. Return ONLY a comma-separated list of movie titles. No introduction, no numbering, and no closing remarks.
-                             2. Only suggest movies released from the year 2000 to the present.
-                             3. Only suggest high-quality movies with a minimum rating of 5.0 on IMDb or 50% on Rotten Tomatoes.
-                             4. Always provide the original English titles for database compatibility.
-                             5. Ensure the recommendations are highly relevant to the user's specific mood." },
-                new { role = "user", content = $"Provide 5 top-rated English movie titles from after the year 2000 that perfectly match this mood: '{mood}'." }
+                new { role = "system", content = @"You are an expert movie curator. Your goal is to translate a user's free-text description into 5 perfect movie recommendations.
+        
+                    Rules for selection:
+                     1. ANALYZE: Identify genres, themes, time periods, and visual styles in the user's text.
+                     2. QUALITY: Only suggest movies with high critical acclaim (IMDb 7.0+).
+                     3. NO TRIVIALITY: Avoid the most obvious mainstream hits unless they perfectly fit (e.g., don't just suggest 'Star Wars' for every space query).
+                     4. FORMAT: Return ONLY a comma-separated list of original English titles. No intro, no chat." },
+                new { role = "user", content = $"Based on this description: '{mood}', find 5 movies that match these specific criteria and vibes." }
             },
                     temperature = 0.5, // Lavere temperatur gør svaret mere fokuseret og konsistent
                     max_tokens = 100   // Vi har kun brug for titlerne, så vi sparer på tokens
@@ -52,10 +53,9 @@ namespace MovieFinderAPI.Service
 
                 var result = await response.Content.ReadFromJsonAsync<JsonElement>();
                 var aiText = result.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
-                Console.WriteLine($"AI foreslog disse film: {aiText}");
 
                 return aiText?.Split(',')
-                             .Select(t => t.Trim().Trim('"')) // Fjerner både mellemrum og eventuelle citationstegn
+                             .Select(t => t.Trim().Trim('"')) 
                              .Where(t => !string.IsNullOrWhiteSpace(t))
                              .ToList() ?? GetFallbackMovies();
             }
