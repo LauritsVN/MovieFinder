@@ -12,7 +12,7 @@ namespace MovieFinderAPI.Models
         public bool HasWatched { get; set; } = false;
         public DateTime Timestamp { get; set; } = DateTime.Now;
 
-        public string OriginalTitle { get; set; } = string.Empty;
-        public string PosterPath { get; set; } = string.Empty;
+        public string? OriginalTitle { get; set; } = string.Empty;
+        public string? PosterPath { get; set; } = string.Empty;
     }
 }

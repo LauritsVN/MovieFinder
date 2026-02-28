@@ -26,7 +26,7 @@ namespace MovieFinderAPI.Controllers
         {
             var finalMovies = new List<TmdbMovieDto>();
 
-            // 1. PRIORITET: Humør/Mood (Gemini AI)
+            // 1. PRIORITET: Humør/Mood (Groq AI)
             if (!string.IsNullOrEmpty(mood))
             {
                 var titles = await _groqService.GetMovieRecommendationsAsync(mood);

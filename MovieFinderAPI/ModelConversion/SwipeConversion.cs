@@ -24,6 +24,7 @@ namespace MovieFinderAPI.ModelConversion
                 OriginalTitle = dto.OriginalTitle,
                 PosterPath = dto.PosterPath
 
+
             };
         }
 
