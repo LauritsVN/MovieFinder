@@ -20,7 +20,13 @@ export const movieApi = {
   },
 
   getMatches: async (userId = 1) => {
+  try {
     const res = await fetch(`${API_URL}/movies/matches/${userId}`);
-    return res.json();
+    if (!res.ok) throw new Error(`Server fejl: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error("API fejl i getMatches:", err);
+    return []; // Returner et tomt array så appen ikke crasher
   }
+}
 };
