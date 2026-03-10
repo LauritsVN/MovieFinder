@@ -9,6 +9,7 @@ Applikationen hjælper brugere med at finde den perfekte film ved at kombinere t
 I stedet for blot at klikke på kategorier, kan man f.eks. skrive: "Jeg vil gerne se en dyster sci-fi film med et twist, der minder om Inception", hvorefter systemet kommer med kvalificerede bud.
 
 **Tech Stack**
+
 Jeg har valgt teknologier, der er relevante for moderne fullstack-udvikling:
 
 Frontend: React
