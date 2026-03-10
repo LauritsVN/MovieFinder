@@ -4,6 +4,7 @@ MoviePicker er mit personlige projekt, født ud af frustrationen over at bruge l
 __Status:__ Under udvikling. Jeg arbejder i øjeblikket på at færdiggøre AI-logikken og finpudse brugerfladen.
 
 **Konceptet**
+
 Applikationen hjælper brugere med at finde den perfekte film ved at kombinere traditionelle søgeparametre (genrer, tidligere sete film) med naturligt sprog via en AI-motor.
 
 I stedet for blot at klikke på kategorier, kan man f.eks. skrive: "Jeg vil gerne se en dyster sci-fi film med et twist, der minder om Inception", hvorefter systemet kommer med kvalificerede bud.
