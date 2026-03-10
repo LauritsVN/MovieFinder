@@ -1,5 +1,5 @@
 **MovieFinder – Intelligent Filmanbefalinger med AI**
-MoviePicker er mit personlige projekt, født ud af frustrationen over at bruge længere tid på at finde en film end på at se den. Projektet fungerer som min legeplads for at udforske React, .NET-integrationer og moderne AI-teknologier (LLM).
+MoviePicker er mit personlige projekt, som er bygget i frustration over at bruge 20 minutter på at vælge en film. I stedet for at scrolle gennem mange lister, ville jeg lave en app, hvor man kan skrive hvad man er i humør til og få et svar med det samme
 
 __Status:__ Under udvikling. Jeg arbejder i øjeblikket på at færdiggøre AI-logikken og finpudse brugerfladen.
 
@@ -15,9 +15,9 @@ Frontend: React
 
 Backend: C# (.NET Core)
 
-API-integrationer: * TMDB API: Til hentning af metadata, billeder og filmdetaljer.
+API-integrationer: * TMDB API: Til hentning af data, billeder og filmdetaljer.
 
-LLM API (Gemini): Til at analysere brugerens tekstønsker og generere intelligente forslag.
+LLM API (Groq): Til at analysere brugerens tekstønsker og generere intelligente forslag.
 
 Sprog: JavaScript og C#.
 
